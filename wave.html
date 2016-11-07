@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>canvas</title>
+<script type="text/javascript">
+
+var canvasWidth=window.innerWidth;
+
+window.addEventListener("load",eventWindowLoaded,false);
+function eventWindowLoaded(){
+	canvasApp();
+}
+window.onresize=function(){//调整窗口大小时触发
+	canvasWidth=window.innerWidth;
+	document.getElementById("canvasOne").width=canvasWidth;
+}
+function canvasApp(){
+	var theCanvas=document.getElementById("canvasOne");
+	theCanvas.width=canvasWidth;
+	var context=theCanvas.getContext("2d");
+
+	//波函数物理量
+	var fun_A=124.0;//振幅
+	var fun_Lamda=400;//波长
+	var fun_miu=0.5;//波速
+	var fun_t=0;//时间计数器
+
+	var FPS=60;
+	var intervalTime=1000/FPS;
+
+	var arrPoint = new Array();
+
+	function drawScreen(){
+		
+
+		//设置线条粗细
+		context.lineWidth=5;
+		//设置颜色
+		context.strokeStyle='rgba(44,124,211,0.9)';
+
+		for(var i=0;i<200;i++){
+			drawCircle(i*30,arrPoint[i]+200);
+		}
+		function drawCircle(x,y){
+
+			context.beginPath();
+			context.arc(x,y,10,0,Math.PI*2,true);
+			context.stroke();
+			context.closePath();
+		}
+		
+	}
+	function clearCanvas(){
+		//background
+		context.fillStyle="rgb(36,41,50)";
+		context.fillRect(0,0,canvasWidth,400);
+	}
+	function Logic(){
+		for(var i=0;i<200;i++){
+			arrPoint[i]=fun_A*Math.cos(2*Math.PI*(fun_miu*fun_t-i*30)/fun_Lamda);
+		}
+		fun_t++;
+	}
+	function Loop(){
+		Logic();
+		clearCanvas();
+		drawScreen();
+		idOfTimeout=window.setTimeout(Loop,intervalTime);
+	}
+	Loop();
+}
+</script>
+</head>
+<body>
+<div id="angle"></div>
+<div style="position:absolute; top:0; left:0;">
+<canvas id="canvasOne" height="400">
+Your browser does not support HTML5 Canvas.
+</canvas>
+</div>
+</body>
+</html>
